@@ -1,6 +1,3 @@
-#Visualizing MMR coverage in Toronto elementary and secondary schools
-
-#package setup
 library(opendatatoronto)
 library(dplyr)
 library(janitor)
@@ -25,29 +22,29 @@ imm_data_cleaned = imm_data %>%
          r=n/d,
          theta=sum(n)/sum(d),
          z=(r - theta)/sqrt((theta * (1 - theta))/d),
-         `MMR Coverage` = cut(z,      breaks = c(-Inf, 
-                                                 qnorm((1-0.998)/2), #lower limit
-                                                 qnorm((1-0.95)/2),  #lower limit
-                                                 -qnorm((1-0.95)/2),  #upper limit
-                                                 -qnorm((1-0.998)/2),  #upper limit
-                                                 Inf),
-                              labels=c('Very Low',
-                                       'Low',
-                                       'Average',
-                                       'High',
-                                       'Very High'))
+         MMR_Coverage = cut(z,      breaks = c(-Inf, 
+                                               qnorm((1-0.998)/2), #lower limit
+                                               qnorm((1-0.95)/2),  #lower limit
+                                               -qnorm((1-0.95)/2),  #upper limit
+                                               -qnorm((1-0.998)/2),  #upper limit
+                                               Inf),
+                            labels=c('Very Low',
+                                     'Low',
+                                     'Average',
+                                     'High',
+                                     'Very High'))
          
   ) %>%
-  select(id, n, d, r, theta, z, `MMR Coverage`, lat, lng, school_name)
+  select(id, n, d, r, theta, z, MMR_Coverage, lat, lng, school_name)
 
-#tool tip summary
-imm_data_cleaned$tooltip = paste(imm_data_cleaned$school_name, ":", paste0(round(imm_data_cleaned$r,2)*100, "%"))
+#legend summary
+imm_data_cleaned$tooltip = paste(paste0(imm_data_cleaned$school_name, ":"), paste0(round(imm_data_cleaned$r,2)*100, "%"))
 imm_data_cleaned$r2 <- imm_data_cleaned$r * 1000
 
-key="insertyourmapdeckkeyhere"
+key="pk.eyJ1IjoibWF0dGt1bWFyIiwiYSI6ImNrMzdmc3gxNzBjNDEzb3FzdHFybjJ3ZHcifQ.rGj37g7Vumg1lbeAegUasA"
 
 
-#plot the map
+
 mapdeck(token = key, style = mapdeck_style("dark"),  pitch = 45) %>%
   add_pointcloud(
     data = imm_data_cleaned
@@ -55,7 +52,7 @@ mapdeck(token = key, style = mapdeck_style("dark"),  pitch = 45) %>%
     , lat = 'lat'
     , elevation = 'r2'
     , layer_id = 'point'
-    , fill_colour = "MMR Coverage"
+    , fill_colour = "MMR_Coverage"
     , tooltip = 'tooltip'
     , legend = TRUE
   )
