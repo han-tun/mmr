@@ -41,7 +41,7 @@ imm_data_cleaned = imm_data %>%
 imm_data_cleaned$tooltip = paste(paste0(imm_data_cleaned$school_name, ":"), paste0(round(imm_data_cleaned$r,2)*100, "%"))
 imm_data_cleaned$r2 <- imm_data_cleaned$r * 1000
 
-key="pk.eyJ1IjoibWF0dGt1bWFyIiwiYSI6ImNrMzdmc3gxNzBjNDEzb3FzdHFybjJ3ZHcifQ.rGj37g7Vumg1lbeAegUasA"
+key="yourmapdeckkeyhere"
 
 
 
